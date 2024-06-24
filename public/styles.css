@@ -1,0 +1,25 @@
+.folder {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+}
+
+.folder img {
+    width: 50px;
+    height: 50px;
+}
+
+.folder p {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.document {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}

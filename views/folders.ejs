@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Editor - Folders</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .folders {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .folder {
+            margin: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .folder img {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Folders</h1>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#createFolderModal">Create Folder</button>
+        <div class="folders mt-3">
+            <% folders.forEach(folder => { %>
+                <div class="folder">
+                    <a href="/stories/documents/<%= folder %>">
+                        <img src="/stories/icons/folder.png" alt="Folder Icon">
+                        <p><%= folder %></p>
+                    </a>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createFolderModal" tabindex="-1" aria-labelledby="createFolderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createFolderModalLabel">Create Folder</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/stories/folders" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="folderName">Folder Name</label>
+                            <input type="text" class="form-control" id="folderName" name="folderName" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

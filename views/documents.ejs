@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Editor - Documents</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Documents in <%= folder %></h1>
+        <form action="/stories/documents/<%= folder %>" method="post">
+            <input type="text" name="documentName" placeholder="New Document Name" required>
+            <button type="submit" class="btn btn-primary">Create Document</button>
+        </form>
+        <div class="documents mt-3">
+            <% documents.forEach(doc => { %>
+                <div class="document">
+                    <a href="#" onclick="loadDocument('<%= folder %>', '<%= doc.name %>')">
+                        <p><%= doc.name %></p>
+                    </a>
+                </div>
+            <% }); %>
+        </div>
+        <div id="document-content" class="mt-3"></div>
+    </div>
+
+    <script>
+        function loadDocument(folder, document) {
+            fetch(`/stories/document/${folder}/${document}`)
+                .then(response => response.json())
+                .then(data => {
+                    const contentDiv = document.getElementById('document-content');
+                    contentDiv.innerHTML = `
+                        <h3>${data.title}</h3>
+                        <pre>${data.content}</pre>
+                        <button onclick="editDocument('${folder}', '${document}', '${data.content}')">Edit</button>
+                    `;
+                });
+        }
+
+        function editDocument(folder, document, content) {
+            const contentDiv = document.getElementById('document-content');
+            contentDiv.innerHTML = `
+                <h3>${document}</h3>
+                <textarea id="edit-content" rows="10" class="form-control">${content}</textarea>
+                <button onclick="saveDocument('${folder}', '${document}')">Save</button>
+                <button onclick="cancelEdit()">Cancel</button>
+                <div id="char-counter" class="text-right"></div>
+            `;
+
+            const textArea = document.getElementById('edit-content');
+            const charCounter = document.getElementById('char-counter');
+            charCounter.textContent = `Character count: ${textArea.value.length}`;
+
+            textArea.addEventListener('input', () => {
+                charCounter.textContent = `Character count: ${textArea.value.length}`;
+            });
+        }
+
+        function saveDocument(folder, document) {
+            const content = document.getElementById('edit-content').value;
+            fetch(`/stories/document/${folder}/${document}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content: content })
+            }).then(response => {
+                if (response.ok) {
+                    loadDocument(folder, document);
+                } else {
+                    alert('Failed to save document');
+                }
+            });
+        }
+
+        function cancelEdit() {
+            const contentDiv = document.getElementById('document-content');
+            contentDiv.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
